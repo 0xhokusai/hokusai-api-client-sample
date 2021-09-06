@@ -38,6 +38,7 @@ function Form(): JSX.Element {
       const signer = provider.getSigner();
       const from = await signer.getAddress();
       const { chainId } = await provider.getNetwork();
+      console.log(chainId);
 
       // Setup contracts
       const forwarder = new ethers.Contract(
@@ -78,6 +79,7 @@ function Form(): JSX.Element {
       ]);
 
       console.log(signature);
+      console.log({ ...message, signature });
     }
 
     // ToDo: Post to API.
