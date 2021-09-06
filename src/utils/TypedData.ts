@@ -24,7 +24,7 @@ const ForwardRequestType = [
 ];
 
 // https://eips.ethereum.org/EIPS/eip-712
-export function createTypedData(
+export function createTypedDataV4(
   chainId: number,
   ForwarderAddress: string,
   message: Message

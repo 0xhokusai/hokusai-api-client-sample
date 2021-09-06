@@ -11,7 +11,7 @@ import {
   Button,
 } from '@chakra-ui/react';
 import { WalletContext } from '../context/WalletProvider';
-import { Message, createTypedData } from '../utils/TypedData';
+import { Message, createTypedDataV4 } from '../utils/TypedData';
 import ForwarderAbi from '../abis/MinimalForwarder.json';
 import HokusaiAbi from '../abis/ERC721WithRoyaltyMetaTx.json';
 
@@ -34,24 +34,27 @@ function Form(): JSX.Element {
   const onSubmit = handleSubmit(async (values: FormValues) => {
     console.log(values);
     if (provider) {
+      // Get signer from Metamask
       const signer = provider.getSigner();
       const from = await signer.getAddress();
       const { chainId } = await provider.getNetwork();
 
+      // Setup contracts
       const forwarder = new ethers.Contract(
         values.forwarderAddress,
         ForwarderAbi.abi,
         provider
       );
-
       const hokusaiInterface = new ethers.utils.Interface(HokusaiAbi.abi);
 
+      // Create tranferFrom data
       const data = hokusaiInterface.encodeFunctionData('transferFrom', [
         from,
         values.toAddress,
         values.tokenId,
       ]);
 
+      // Create meta transaction message
       const message: Message = {
         from,
         to: values.toAddress,
@@ -61,12 +64,14 @@ function Form(): JSX.Element {
         data,
       };
 
-      const typedData = createTypedData(
+      // Create typedDataV4
+      const typedData = createTypedDataV4(
         chainId,
         values.forwarderAddress,
         message
       );
 
+      // Sign typedData
       const signature = await provider.send('eth_signTypedData_v4', [
         from,
         JSON.stringify(typedData),

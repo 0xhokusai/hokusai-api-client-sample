@@ -16,6 +16,7 @@ type Wallet = {
 };
 
 async function connectWalletMetamask() {
+  // Initialize Metamask
   const provider = await window.ethereum
     .request({
       method: 'eth_requestAccounts',
@@ -25,16 +26,16 @@ async function connectWalletMetamask() {
     .catch((error: Error) => {
       console.log(error);
     });
-  // Set Polygon network
+  // Set network to mumbai testnet
   await window.ethereum.request({
     method: 'wallet_addEthereumChain',
     params: [
       {
-        chainId: '0x89',
-        chainName: 'Matic',
+        chainId: '0x13881',
+        chainName: 'Mumbai Testnet',
         nativeCurrency: { name: 'Matic', symbol: 'MATIC', decimals: 18 },
-        rpcUrls: ['https://rpc-mainnet.matic.network'],
-        blockExplorerUrls: ['https://polygonscan.com/'],
+        rpcUrls: ['https://rpc-mumbai.matic.today'],
+        blockExplorerUrls: ['https://mumbai.polygonscan.com/'],
       },
     ],
   });
@@ -54,7 +55,6 @@ export const WalletProvider: React.FC = ({ children }) => {
   const getAddress = async (p: ethers.providers.Web3Provider) => {
     const a = await p.getSigner().getAddress();
     setAddress(a);
-    setIsConnected(true);
     return a;
   };
 
@@ -63,6 +63,7 @@ export const WalletProvider: React.FC = ({ children }) => {
       .then(async (p) => {
         setProvider(p);
         await getAddress(p);
+        setIsConnected(true);
         setWalletType('Metamask');
       })
       .catch((error) => {
