@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import { ethers } from 'ethers';
 import { useForm } from 'react-hook-form';
 import {
   Center,
@@ -10,6 +11,9 @@ import {
   Button,
 } from '@chakra-ui/react';
 import { WalletContext } from '../context/WalletProvider';
+import { Message, createTypedData } from '../utils/TypedData';
+import ForwarderAbi from '../abis/MinimalForwarder.json';
+import HokusaiAbi from '../abis/ERC721WithRoyaltyMetaTx.json';
 
 type FormValues = {
   apiKey: string;
@@ -25,10 +29,52 @@ function Form(): JSX.Element {
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>();
-  const { isConnected } = useContext(WalletContext);
+  const { isConnected, provider } = useContext(WalletContext);
 
   const onSubmit = handleSubmit(async (values: FormValues) => {
     console.log(values);
+    if (provider) {
+      const signer = provider.getSigner();
+      const from = await signer.getAddress();
+      const { chainId } = await provider.getNetwork();
+
+      const forwarder = new ethers.Contract(
+        values.forwarderAddress,
+        ForwarderAbi.abi,
+        provider
+      );
+
+      const hokusaiInterface = new ethers.utils.Interface(HokusaiAbi.abi);
+
+      const data = hokusaiInterface.encodeFunctionData('transferFrom', [
+        from,
+        values.toAddress,
+        values.tokenId,
+      ]);
+
+      const message: Message = {
+        from,
+        to: values.toAddress,
+        value: 0,
+        gas: 1e6,
+        nonce: (await forwarder.getNonce(from)).toNumber(),
+        data,
+      };
+
+      const typedData = createTypedData(
+        chainId,
+        values.forwarderAddress,
+        message
+      );
+
+      const signature = await provider.send('eth_signTypedData_v4', [
+        from,
+        JSON.stringify(typedData),
+      ]);
+
+      console.log(signature);
+    }
+
     // ToDo: Post to API.
   });
 

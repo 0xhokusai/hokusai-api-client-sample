@@ -12,9 +12,7 @@ function WalletConnect(): JSX.Element {
           await connectMetamask();
         }}
       >
-        {address
-          ? `${address.slice(0, 6)}...${address.slice(-6)}`
-          : 'ウォレットと接続'}
+        {address ? `${address.slice(0, 6)}...${address.slice(-6)}` : 'Connect'}
       </Button>
     </>
   );

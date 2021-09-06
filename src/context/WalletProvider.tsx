@@ -10,6 +10,7 @@ type WalletType = 'Metamask' | undefined;
 type Wallet = {
   address?: string;
   isConnected?: boolean;
+  provider?: ethers.providers.Web3Provider;
   walletType: WalletType;
   connectMetamask(): Promise<void>;
 };
@@ -81,6 +82,7 @@ export const WalletProvider: React.FC = ({ children }) => {
       value={{
         address,
         isConnected,
+        provider,
         walletType,
         connectMetamask,
       }}
