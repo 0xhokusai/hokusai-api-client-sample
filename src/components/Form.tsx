@@ -21,6 +21,7 @@ type FormValues = {
   forwarderAddress: string;
   toAddress: string;
   tokenId: number;
+  contractAddress: string;
 };
 
 function Form(): JSX.Element {
@@ -38,6 +39,7 @@ function Form(): JSX.Element {
       const signer = provider.getSigner();
       const from = await signer.getAddress();
       const { chainId } = await provider.getNetwork();
+      console.log(chainId);
 
       // Setup contracts
       const forwarder = new ethers.Contract(
@@ -57,7 +59,7 @@ function Form(): JSX.Element {
       // Create meta transaction message
       const message: Message = {
         from,
-        to: values.toAddress,
+        to: values.contractAddress,
         value: 0,
         gas: 1e6,
         nonce: (await forwarder.getNonce(from)).toNumber(),
@@ -78,6 +80,7 @@ function Form(): JSX.Element {
       ]);
 
       console.log(signature);
+      console.log({ ...message, signature });
     }
 
     // ToDo: Post to API.
@@ -119,6 +122,18 @@ function Form(): JSX.Element {
               <Input
                 type="forwarderAddress"
                 {...register('forwarderAddress', { required: true })}
+              />
+              <FormErrorMessage>Fill this form.</FormErrorMessage>
+            </FormControl>
+            <FormControl
+              id="contractAddress"
+              isInvalid={!!errors.contractAddress}
+              py={2}
+            >
+              <FormLabel>contractAddress</FormLabel>
+              <Input
+                type="contractAddress"
+                {...register('contractAddress', { required: true })}
               />
               <FormErrorMessage>Fill this form.</FormErrorMessage>
             </FormControl>
