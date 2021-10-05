@@ -15,7 +15,26 @@ type Wallet = {
   connectMetamask(): Promise<void>;
 };
 
-async function connectWalletMetamask() {
+type Network = 'mumbai' | 'polygon';
+
+const networkParams = {
+  mumbai: {
+    chainId: '0x13881',
+    chainName: 'Mumbai Testnet',
+    nativeCurrency: { name: 'Matic', symbol: 'MATIC', decimals: 18 },
+    rpcUrls: ['https://rpc-mumbai.matic.today'],
+    blockExplorerUrls: ['https://mumbai.polygonscan.com/'],
+  },
+  polygon: {
+    chainId: '0x89',
+    chainName: 'Polygon',
+    nativeCurrency: { name: 'Matic', symbol: 'MATIC', decimals: 18 },
+    rpcUrls: ['https://polygon-rpc.com'],
+    blockExplorerUrls: ['https://mumbai.polygonscan.com/'],
+  },
+};
+
+async function connectWalletMetamask(network: Network) {
   // Initialize Metamask
   const provider = await window.ethereum
     .request({
@@ -26,18 +45,11 @@ async function connectWalletMetamask() {
     .catch((error: Error) => {
       console.log(error);
     });
-  // Set network to mumbai testnet
+
+  // Set network
   await window.ethereum.request({
     method: 'wallet_addEthereumChain',
-    params: [
-      {
-        chainId: '0x13881',
-        chainName: 'Mumbai Testnet',
-        nativeCurrency: { name: 'Matic', symbol: 'MATIC', decimals: 18 },
-        rpcUrls: ['https://rpc-mumbai.matic.today'],
-        blockExplorerUrls: ['https://mumbai.polygonscan.com/'],
-      },
-    ],
+    params: [networkParams[network]],
   });
   return provider;
 }
@@ -47,6 +59,13 @@ export const WalletProvider: React.FC = ({ children }) => {
   WalletProvider.propTypes = {
     children: PropTypes.node.isRequired,
   };
+
+  const NETWORK = process.env.REACT_APP_NETWORK || undefined;
+
+  if (!NETWORK) {
+    throw new Error('Invalid NETWORK in .env');
+  }
+
   const [address, setAddress] = useState<string>();
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [walletType, setWalletType] = useState<WalletType>('Metamask');
@@ -59,7 +78,7 @@ export const WalletProvider: React.FC = ({ children }) => {
   };
 
   const connectMetamask = async () => {
-    await connectWalletMetamask()
+    await connectWalletMetamask(NETWORK as Network)
       .then(async (p) => {
         setProvider(p);
         await getAddress(p);
