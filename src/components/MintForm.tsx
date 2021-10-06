@@ -9,8 +9,10 @@ import {
   Input,
   Button,
   Spinner,
+  Link,
 } from '@chakra-ui/react';
 import { WalletContext } from '../context/WalletProvider';
+import { genPolygonscanUrl, TxObj } from '../utils/Poygonscan';
 
 type FormValues = {
   apiKey: string;
@@ -49,8 +51,10 @@ function MintForm(): JSX.Element {
         }),
       }
     )
-      .then((res) => res.text())
-      .then((res) => setResponse(res))
+      .then((res) => res.json())
+      .then((res) => {
+        setResponse(genPolygonscanUrl(res as TxObj));
+      })
       .catch((error) => console.log(error));
 
     setIsConfirmed(true);
@@ -61,7 +65,7 @@ function MintForm(): JSX.Element {
     <>
       <Center>
         {isLoading && <Spinner />}
-        {response}
+        <Link href={response}>{response}</Link>
       </Center>
     </>
   ) : (

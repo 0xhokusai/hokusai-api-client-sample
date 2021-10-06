@@ -9,8 +9,11 @@ import {
   FormErrorMessage,
   Input,
   Button,
+  Spinner,
+  Link,
 } from '@chakra-ui/react';
 import { WalletContext } from '../context/WalletProvider';
+import { genPolygonscanUrl, TxObj } from '../utils/Poygonscan';
 import { Message, createTypedDataV4 } from '../utils/TypedData';
 import ForwarderAbi from '../abis/MinimalForwarder.json';
 import HokusaiAbi from '../abis/ERC721WithRoyaltyMetaTx.json';
@@ -32,6 +35,7 @@ function TransferForm(): JSX.Element {
   } = useForm<FormValues>();
   const { isConnected, provider } = useContext(WalletContext);
   const [isConfirmed, setIsConfirmed] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [response, setResponse] = useState<string>('');
   const baseUrl = process.env.REACT_APP_HOKUSAI_API_URL || undefined;
 
@@ -40,6 +44,8 @@ function TransferForm(): JSX.Element {
   }
 
   const onSubmit = handleSubmit(async (values: FormValues) => {
+    setIsLoading(true);
+    setIsConfirmed(true);
     if (provider) {
       // Get signer from Metamask
       const signer = provider.getSigner();
@@ -84,7 +90,7 @@ function TransferForm(): JSX.Element {
         JSON.stringify(typedData),
       ]);
 
-      fetch(
+      await fetch(
         `${baseUrl}/v1/nfts/${values.contractId}/transfer?key=${values.apiKey}`,
         {
           method: 'POST',
@@ -92,19 +98,21 @@ function TransferForm(): JSX.Element {
           body: JSON.stringify({ request: { ...message, signature } }),
         }
       )
-        .then((res) => res.text())
-        .then((res) => setResponse(res))
+        .then((res) => res.json())
+        .then((res) => {
+          setResponse(genPolygonscanUrl(res as TxObj));
+        })
         .catch((error) => console.log('error', error));
-
-      setIsConfirmed(true);
     }
-
-    // ToDo: Post to API.
+    setIsLoading(false);
   });
 
   return isConfirmed ? (
     <>
-      <Center>{response}</Center>
+      <Center>
+        {isLoading && <Spinner />}
+        <Link href={response}>{response}</Link>
+      </Center>
     </>
   ) : (
     <>
