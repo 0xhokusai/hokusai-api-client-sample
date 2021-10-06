@@ -63,7 +63,7 @@ export const WalletProvider: React.FC = ({ children }) => {
   const NETWORK = process.env.REACT_APP_NETWORK || undefined;
 
   if (!NETWORK) {
-    throw new Error('Invalid NETWORK in .env');
+    throw new Error('Invalid REACT_APP_NETWORK in .env');
   }
 
   const [address, setAddress] = useState<string>();

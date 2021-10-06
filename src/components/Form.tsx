@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { ethers } from 'ethers';
 import { useForm } from 'react-hook-form';
 import {
@@ -31,15 +31,20 @@ function Form(): JSX.Element {
     formState: { errors },
   } = useForm<FormValues>();
   const { isConnected, provider } = useContext(WalletContext);
+  const [isConfirmed, setIsConfirmed] = useState<boolean>(false);
+  const [response, setResponse] = useState<string>('');
+  const baseUrl = process.env.REACT_APP_HOKUSAI_API_URL || undefined;
+
+  if (!baseUrl) {
+    throw new Error('Invalid REACT_APP_HOKUSAI_API_URL in .env');
+  }
 
   const onSubmit = handleSubmit(async (values: FormValues) => {
-    console.log(values);
     if (provider) {
       // Get signer from Metamask
       const signer = provider.getSigner();
       const from = await signer.getAddress();
       const { chainId } = await provider.getNetwork();
-      console.log(chainId);
 
       // Setup contracts
       const forwarder = new ethers.Contract(
@@ -79,14 +84,29 @@ function Form(): JSX.Element {
         JSON.stringify(typedData),
       ]);
 
-      console.log(signature);
-      console.log({ ...message, signature });
+      fetch(
+        `${baseUrl}/v1/nfts/${values.contractId}/transfer?key=${values.apiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ request: { ...message, signature } }),
+        }
+      )
+        .then((res) => res.text())
+        .then((res) => setResponse(res))
+        .catch((error) => console.log('error', error));
+
+      setIsConfirmed(true);
     }
 
     // ToDo: Post to API.
   });
 
-  return (
+  return isConfirmed ? (
+    <>
+      <Center>{response}</Center>
+    </>
+  ) : (
     <>
       <Center>
         <Stack
@@ -100,6 +120,7 @@ function Form(): JSX.Element {
             <FormControl id="apiKey" isInvalid={!!errors.apiKey} py={2}>
               <FormLabel>apiKey</FormLabel>
               <Input
+                defaultValue={process.env.REACT_APP_HOKUSAI_API_KEY || ''}
                 type="apiKey"
                 {...register('apiKey', { required: true })}
               />
@@ -109,19 +130,8 @@ function Form(): JSX.Element {
               <FormLabel>contractId</FormLabel>
               <Input
                 type="contractId"
+                defaultValue={process.env.REACT_APP_CONTRACT_ID || ''}
                 {...register('contractId', { required: true })}
-              />
-              <FormErrorMessage>Fill this form.</FormErrorMessage>
-            </FormControl>
-            <FormControl
-              id="forwarderAddress"
-              isInvalid={!!errors.forwarderAddress}
-              py={2}
-            >
-              <FormLabel>forwarderAddress</FormLabel>
-              <Input
-                type="forwarderAddress"
-                {...register('forwarderAddress', { required: true })}
               />
               <FormErrorMessage>Fill this form.</FormErrorMessage>
             </FormControl>
@@ -133,10 +143,26 @@ function Form(): JSX.Element {
               <FormLabel>contractAddress</FormLabel>
               <Input
                 type="contractAddress"
+                defaultValue={process.env.REACT_APP_CONTRACT_ADDRESS || ''}
                 {...register('contractAddress', { required: true })}
               />
               <FormErrorMessage>Fill this form.</FormErrorMessage>
             </FormControl>
+
+            <FormControl
+              id="forwarderAddress"
+              isInvalid={!!errors.forwarderAddress}
+              py={2}
+            >
+              <FormLabel>forwarderAddress</FormLabel>
+              <Input
+                type="forwarderAddress"
+                defaultValue={process.env.REACT_APP_FORWARDER_ADDRESS || ''}
+                {...register('forwarderAddress', { required: true })}
+              />
+              <FormErrorMessage>Fill this form.</FormErrorMessage>
+            </FormControl>
+
             <FormControl id="toAddress" isInvalid={!!errors.toAddress} py={2}>
               <FormLabel>toAddress</FormLabel>
               <Input
