@@ -24,7 +24,7 @@ type FormValues = {
   contractAddress: string;
 };
 
-function Form(): JSX.Element {
+function TransferForm(): JSX.Element {
   const {
     register,
     handleSubmit,
@@ -191,4 +191,4 @@ function Form(): JSX.Element {
   );
 }
 
-export default Form;
+export default TransferForm;
