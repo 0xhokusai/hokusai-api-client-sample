@@ -30,8 +30,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "postinstall": "husky install",
-    "prepare": "husky install"
+    "prepare": "node --eval 'process.exit(process.env.NODE_ENV === `production` ? 0 : 1)' || husky install"
   },
   "eslintConfig": {
     "extends": [

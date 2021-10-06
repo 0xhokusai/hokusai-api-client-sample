@@ -1,0 +1,24 @@
+runtime: nodejs14
+
+instance_class: F1
+
+automatic_scaling:
+  max_instances: 1
+  min_instances: 1
+
+default_expiration: '30d'
+
+handlers:
+  - url: /static
+    static_dir: build/static
+  - url: /(.*\.(json|ico|js))$
+    static_files: build/\1
+    upload: build/.*\.(json|ico|js)$
+  - url: .*
+    static_files: build/index.html
+    upload: build/index.html
+    expiration: '0s'
+  - url: .*
+    secure: always
+    script: auto
+    redirect_http_response_code: 301
