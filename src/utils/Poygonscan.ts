@@ -2,7 +2,7 @@ export type TxObj = {
   txHash: string;
 };
 
-export function genPolygonscanUrl(txObj: TxObj) {
+export function genPolygonscanUrl(txObj: TxObj): string {
   const NETWORK = process.env.REACT_APP_NETWORK || undefined;
 
   if (!NETWORK) {

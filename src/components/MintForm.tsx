@@ -56,8 +56,6 @@ function MintForm(): JSX.Element {
         setResponse(genPolygonscanUrl(res as TxObj));
       })
       .catch((error) => console.log(error));
-
-    setIsConfirmed(true);
     setIsLoading(false);
   });
 
@@ -108,7 +106,7 @@ function MintForm(): JSX.Element {
               <FormErrorMessage>Fill this form.</FormErrorMessage>
             </FormControl>
             <FormControl id="tokenUri" isInvalid={!!errors.tokenUri} py={2}>
-              <FormLabel>tokenUri</FormLabel>
+              <FormLabel>Metadata URL(.json)</FormLabel>
               <Input
                 type="tokenUri"
                 {...register('tokenUri', { required: true })}
