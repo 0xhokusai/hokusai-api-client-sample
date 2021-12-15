@@ -17,7 +17,7 @@ type Wallet = {
   connectMetamask(n: Network): Promise<void>;
 };
 
-type Network = 'PolygonMumbai' | 'PolygonMainnet';
+export type Network = 'PolygonMumbai' | 'PolygonMainnet';
 
 const networkParams = {
   PolygonMumbai: {
