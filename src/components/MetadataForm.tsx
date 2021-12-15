@@ -12,6 +12,7 @@ import {
   Link,
   Text,
   Box,
+  Image,
 } from '@chakra-ui/react';
 import { NFTStorage, toGatewayURL } from 'nft.storage';
 import { useDropzone } from 'react-dropzone';
@@ -34,6 +35,7 @@ function MetadataForm(): JSX.Element {
 
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     accept: 'image/*',
+    multiple: false,
   });
 
   const endpoint = toGatewayURL('https://api.nft.storage');
@@ -107,6 +109,9 @@ function MetadataForm(): JSX.Element {
               <FormErrorMessage>Fill this form.</FormErrorMessage>
             </FormControl>
             <FormLabel>Image</FormLabel>
+            <Text pb={2} align="center">
+              Drag & drop here, or click to upload
+            </Text>
             <Box
               boxSize="xs"
               borderRadius="md"
@@ -114,8 +119,21 @@ function MetadataForm(): JSX.Element {
               borderColor="gray.200"
               {...getRootProps({ className: 'dropzone' })}
             >
-              <input {...getInputProps()} />
-              <Text align="center">Drag & drop here, or click to upload</Text>
+              {acceptedFiles[0] ? (
+                <>
+                  <Box>
+                    <Image
+                      objectFit="contain"
+                      src={URL.createObjectURL(acceptedFiles[0])}
+                    />
+                    <input {...getInputProps()} />
+                  </Box>
+                </>
+              ) : (
+                <>
+                  <input {...getInputProps()} />
+                </>
+              )}
             </Box>
             <Center p={4}>
               <Button p={4} type="submit">
