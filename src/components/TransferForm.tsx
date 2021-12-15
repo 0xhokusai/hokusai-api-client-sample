@@ -119,7 +119,9 @@ function TransferForm(): JSX.Element {
       <Center>
         <Stack direction="column" align="center">
           {isLoading && <Spinner />}
-          <Link href={response}>{response}</Link>
+          <Link isExternal href={response}>
+            {response}
+          </Link>
           {error && <Text>error</Text>}
           <Button onClick={() => reset()}>Back</Button>
         </Stack>
@@ -139,7 +141,7 @@ function TransferForm(): JSX.Element {
             <FormControl id="apiKey" isInvalid={!!errors.apiKey} py={2}>
               <FormLabel>apiKey</FormLabel>
               <Input
-                defaultValue={process.env.REACT_APP_HOKUSAI_API_KEY || ''}
+                defaultValue={import.meta.env.VITE_HOKUSAI_API_KEY || ''}
                 type="apiKey"
                 {...register('apiKey', { required: true })}
               />
@@ -149,7 +151,7 @@ function TransferForm(): JSX.Element {
               <FormLabel>contractId</FormLabel>
               <Input
                 type="contractId"
-                defaultValue={process.env.REACT_APP_CONTRACT_ID || ''}
+                defaultValue={import.meta.env.VITE_CONTRACT_ID || ''}
                 {...register('contractId', { required: true })}
               />
               <FormErrorMessage>Fill this form.</FormErrorMessage>
@@ -162,7 +164,7 @@ function TransferForm(): JSX.Element {
               <FormLabel>contractAddress</FormLabel>
               <Input
                 type="contractAddress"
-                defaultValue={process.env.REACT_APP_CONTRACT_ADDRESS || ''}
+                defaultValue={import.meta.env.VITE_CONTRACT_ADDRESS || ''}
                 {...register('contractAddress', { required: true })}
               />
               <FormErrorMessage>Fill this form.</FormErrorMessage>
@@ -176,7 +178,7 @@ function TransferForm(): JSX.Element {
               <FormLabel>forwarderAddress</FormLabel>
               <Input
                 type="forwarderAddress"
-                defaultValue={process.env.REACT_APP_FORWARDER_ADDRESS || ''}
+                defaultValue={import.meta.env.VITE_FORWARDER_ADDRESS || ''}
                 {...register('forwarderAddress', { required: true })}
               />
               <FormErrorMessage>Fill this form.</FormErrorMessage>
