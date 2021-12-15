@@ -33,15 +33,12 @@ function TransferForm(): JSX.Element {
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>();
-  const { isConnected, provider } = useContext(WalletContext);
+  const { isConnected, provider, network } = useContext(WalletContext);
   const [isConfirmed, setIsConfirmed] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [response, setResponse] = useState<string>('');
-  const baseUrl = process.env.REACT_APP_HOKUSAI_API_URL || undefined;
-
-  if (!baseUrl) {
-    throw new Error('Invalid REACT_APP_HOKUSAI_API_URL in .env');
-  }
+  const baseUrl =
+    network === 'PolygonMainnet' ? 'polygon.hokusai.app' : 'mumbai.hokusai.app';
 
   const onSubmit = handleSubmit(async (values: FormValues) => {
     setIsLoading(true);
@@ -91,7 +88,7 @@ function TransferForm(): JSX.Element {
       ]);
 
       await fetch(
-        `${baseUrl}/v1/nfts/${values.contractId}/transfer?key=${values.apiKey}`,
+        `https://${baseUrl}/v1/nfts/${values.contractId}/transfer?key=${values.apiKey}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

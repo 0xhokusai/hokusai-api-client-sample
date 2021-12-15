@@ -27,21 +27,18 @@ function MintForm(): JSX.Element {
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>();
-  const { isConnected, address } = useContext(WalletContext);
+  const { isConnected, network } = useContext(WalletContext);
   const [isConfirmed, setIsConfirmed] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [response, setResponse] = useState<string>('');
-  const baseUrl = process.env.REACT_APP_HOKUSAI_API_URL || undefined;
-
-  if (!baseUrl) {
-    throw new Error('Invalid REACT_APP_HOKUSAI_API_URL in .env');
-  }
+  const baseUrl =
+    network === 'PolygonMainnet' ? 'polygon.hokusai.app' : 'mumbai.hokusai.app';
 
   const onSubmit = handleSubmit(async (values: FormValues) => {
     setIsLoading(true);
     setIsConfirmed(true);
     await fetch(
-      `${baseUrl}/v1/nfts/${values.contractId}/mint?key=${values.apiKey}`,
+      `https://${baseUrl}/v1/nfts/${values.contractId}/mint?key=${values.apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -100,7 +97,6 @@ function MintForm(): JSX.Element {
               <FormLabel>toAddress</FormLabel>
               <Input
                 type="toAddress"
-                defaultValue={address}
                 {...register('toAddress', { required: true })}
               />
               <FormErrorMessage>Fill this form.</FormErrorMessage>
