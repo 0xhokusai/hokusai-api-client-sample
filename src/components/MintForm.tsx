@@ -71,7 +71,9 @@ function MintForm(): JSX.Element {
       <Center>
         <Stack direction="column" align="center">
           {isLoading && <Spinner />}
-          <Link href={response}>{response}</Link>
+          <Link isExternal href={response}>
+            {response}
+          </Link>
           {error && <Text>error</Text>}
           <Button onClick={() => reset()}>Back</Button>
         </Stack>
