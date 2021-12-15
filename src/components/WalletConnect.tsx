@@ -1,21 +1,32 @@
 import React, { useContext } from 'react';
-import { Button } from '@chakra-ui/react';
+import { Button, HStack, VStack, Text } from '@chakra-ui/react';
 import { WalletContext } from '../context/WalletProvider';
 
 function WalletConnect(): JSX.Element {
-  const { connectMetamask, address } = useContext(WalletContext);
+  const { changeNetowrk, address, network } = useContext(WalletContext);
 
   return (
     <>
-      <Button
-        onClick={async () => {
-          await connectMetamask();
-        }}
-      >
-        {address
-          ? `${address.slice(0, 6)}...${address.slice(-6)}`
-          : 'Connect Wallet'}
-      </Button>
+      <VStack p={4}>
+        <Text>Current Network: {network}</Text>
+        <Text>Your Address: {address}</Text>
+        <HStack>
+          <Button
+            onClick={async () => {
+              await changeNetowrk('PolygonMumbai');
+            }}
+          >
+            Connect Mumbai
+          </Button>
+          <Button
+            onClick={async () => {
+              await changeNetowrk('PolygonMainnet');
+            }}
+          >
+            Connect Mainnet
+          </Button>
+        </HStack>
+      </VStack>
     </>
   );
 }

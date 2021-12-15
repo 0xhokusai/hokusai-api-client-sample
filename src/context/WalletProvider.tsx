@@ -10,9 +10,11 @@ type WalletType = 'Metamask' | undefined;
 type Wallet = {
   address?: string;
   isConnected?: boolean;
+  network: Network;
   provider?: ethers.providers.Web3Provider;
   walletType: WalletType;
-  connectMetamask(): Promise<void>;
+  changeNetowrk(n: Network): Promise<void>;
+  connectMetamask(n: Network): Promise<void>;
 };
 
 type Network = 'PolygonMumbai' | 'PolygonMainnet';
@@ -67,6 +69,7 @@ export const WalletProvider: React.FC = ({ children }) => {
   }
 
   const [address, setAddress] = useState<string>();
+  const [network, setNetwork] = useState<Network>('PolygonMumbai');
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [walletType, setWalletType] = useState<WalletType>('Metamask');
   const [provider, setProvider] = useState<ethers.providers.Web3Provider>();
@@ -77,8 +80,8 @@ export const WalletProvider: React.FC = ({ children }) => {
     return a;
   };
 
-  const connectMetamask = async () => {
-    await connectWalletMetamask(NETWORK as Network)
+  const connectMetamask = async (n: Network) => {
+    await connectWalletMetamask(n)
       .then(async (p) => {
         setProvider(p);
         await getAddress(p);
@@ -90,8 +93,13 @@ export const WalletProvider: React.FC = ({ children }) => {
       });
   };
 
+  const changeNetowrk = async (n: Network) => {
+    await connectMetamask(n);
+    setNetwork(n);
+  };
+
   useEffect(() => {
-    connectMetamask();
+    connectMetamask(network);
     if (provider) {
       getAddress(provider);
     }
@@ -102,8 +110,10 @@ export const WalletProvider: React.FC = ({ children }) => {
       value={{
         address,
         isConnected,
+        network,
         provider,
         walletType,
+        changeNetowrk,
         connectMetamask,
       }}
     >
