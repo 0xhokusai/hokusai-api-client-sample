@@ -91,7 +91,7 @@ function MintForm(): JSX.Element {
             <FormControl id="apiKey" isInvalid={!!errors.apiKey} py={2}>
               <FormLabel>apiKey</FormLabel>
               <Input
-                defaultValue={process.env.REACT_APP_HOKUSAI_API_KEY || ''}
+                defaultValue={import.meta.env.VITE_HOKUSAI_API_KEY || ''}
                 type="apiKey"
                 {...register('apiKey', { required: true })}
               />
@@ -101,7 +101,7 @@ function MintForm(): JSX.Element {
               <FormLabel>contractId</FormLabel>
               <Input
                 type="contractId"
-                defaultValue={process.env.REACT_APP_CONTRACT_ID || ''}
+                defaultValue={import.meta.env.VITE_CONTRACT_ID || ''}
                 {...register('contractId', { required: true })}
               />
               <FormErrorMessage>Fill this form.</FormErrorMessage>
