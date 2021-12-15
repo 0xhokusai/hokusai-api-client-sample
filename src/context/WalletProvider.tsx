@@ -15,19 +15,19 @@ type Wallet = {
   connectMetamask(): Promise<void>;
 };
 
-type Network = 'mumbai' | 'polygon';
+type Network = 'PolygonMumbai' | 'PolygonMainnet';
 
 const networkParams = {
-  mumbai: {
+  PolygonMumbai: {
     chainId: '0x13881',
     chainName: 'Mumbai Testnet',
     nativeCurrency: { name: 'Matic', symbol: 'MATIC', decimals: 18 },
     rpcUrls: ['https://rpc-mumbai.matic.today'],
     blockExplorerUrls: ['https://mumbai.polygonscan.com/'],
   },
-  polygon: {
+  PolygonMainnet: {
     chainId: '0x89',
-    chainName: 'Polygon',
+    chainName: 'Polygon Mainnet',
     nativeCurrency: { name: 'Matic', symbol: 'MATIC', decimals: 18 },
     rpcUrls: ['https://polygon-rpc.com'],
     blockExplorerUrls: ['https://mumbai.polygonscan.com/'],
