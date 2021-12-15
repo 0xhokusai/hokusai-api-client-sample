@@ -62,12 +62,6 @@ export const WalletProvider: React.FC = ({ children }) => {
     children: PropTypes.node.isRequired,
   };
 
-  const NETWORK = process.env.REACT_APP_NETWORK || undefined;
-
-  if (!NETWORK) {
-    throw new Error('Invalid REACT_APP_NETWORK in .env');
-  }
-
   const [address, setAddress] = useState<string>();
   const [network, setNetwork] = useState<Network>('PolygonMumbai');
   const [isConnected, setIsConnected] = useState<boolean>(false);
