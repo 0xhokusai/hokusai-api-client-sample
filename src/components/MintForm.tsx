@@ -10,6 +10,7 @@ import {
   Button,
   Spinner,
   Link,
+  Text,
 } from '@chakra-ui/react';
 import { WalletContext } from '../context/WalletProvider';
 import { genPolygonscanUrl, TxObj } from '../utils/Poygonscan';
@@ -31,6 +32,7 @@ function MintForm(): JSX.Element {
   const [isConfirmed, setIsConfirmed] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [response, setResponse] = useState<string>('');
+  const [error, setError] = useState<string>('');
   const baseUrl =
     network === 'PolygonMainnet' ? 'polygon.hokusai.app' : 'mumbai.hokusai.app';
 
@@ -50,17 +52,29 @@ function MintForm(): JSX.Element {
     )
       .then((res) => res.json())
       .then((res) => {
-        setResponse(genPolygonscanUrl(res as TxObj));
+        setResponse(genPolygonscanUrl(res as TxObj, network));
       })
-      .catch((error) => console.log(error));
+      .catch((e) => {
+        console.log(e);
+        setError(e);
+      });
     setIsLoading(false);
   });
+
+  const reset = () => {
+    setError('');
+    setIsConfirmed(false);
+  };
 
   return isConfirmed ? (
     <>
       <Center>
-        {isLoading && <Spinner />}
-        <Link href={response}>{response}</Link>
+        <Stack direction="column" align="center">
+          {isLoading && <Spinner />}
+          <Link href={response}>{response}</Link>
+          {error && <Text>error</Text>}
+          <Button onClick={() => reset()}>Back</Button>
+        </Stack>
       </Center>
     </>
   ) : (
