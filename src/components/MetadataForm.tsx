@@ -56,8 +56,11 @@ function MetadataForm(): JSX.Element {
           console.log(e);
           setError(e);
         });
-      const url = new URL(metadata.url);
-      setResponse(`https://dweb.link/ipfs/${url.hostname}${url.pathname}`);
+
+      if (metadata) {
+        const CIDWithPath = metadata.url.replace('ipfs://', '');
+        setResponse(`https://dweb.link/ipfs/${CIDWithPath}`);
+      }
     }
     setIsLoading(false);
   });
