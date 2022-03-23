@@ -13,6 +13,7 @@ import WalletConnect from '../components/WalletConnect';
 import TransferForm from '../components/TransferForm';
 import MintForm from '../components/MintForm';
 import MetadataForm from '../components/MetadataForm';
+import BatchMintForm from '../components/BatchMint';
 
 function Home(): JSX.Element {
   return (
@@ -20,7 +21,8 @@ function Home(): JSX.Element {
       <WalletConnect />
       <Tabs>
         <TabList>
-          <Tab>Mint</Tab>
+          <Tab>Mint(v1)</Tab>
+          <Tab>BatchMint(v2)</Tab>
           <Tab>Transfer</Tab>
         </TabList>
         <TabPanels>
@@ -31,6 +33,9 @@ function Home(): JSX.Element {
               <Text fontSize="lg">2. Mint NFT</Text>
               <MintForm />
             </Stack>
+          </TabPanel>
+          <TabPanel>
+            <BatchMintForm />
           </TabPanel>
           <TabPanel>
             <TransferForm />

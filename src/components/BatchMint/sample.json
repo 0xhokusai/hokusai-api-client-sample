@@ -1,0 +1,4 @@
+{
+  "fields": ["address", "tokenURI"],
+  "data": [["0x000000000000", "https://example/matadata.json"]]
+}
