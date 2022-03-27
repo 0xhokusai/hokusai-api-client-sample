@@ -125,9 +125,19 @@ function BatchMintForm(): JSX.Element {
           </Button>
         </Box>
       </form>
-      <Link isExternal href={response}>
-        {response}
-      </Link>
+      {response && (
+        <Box
+          backgroundColor="#fcfcfc"
+          p={4}
+          border="1px solid #eee"
+          borderRadius={8}
+        >
+          <Link color="blue.500" isExternal href={response}>
+            {response}
+          </Link>
+        </Box>
+      )}
+      <Box h={5} />
     </Stack>
   );
 }

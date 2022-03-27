@@ -3,13 +3,13 @@ import { ArrowForwardIcon, LinkIcon } from '@chakra-ui/icons';
 import { Box, HStack, Link, VStack } from '@chakra-ui/react';
 
 interface MintData {
-  address: string;
+  to: string;
   tokenURI: string;
 }
 
 type Props = MintData;
 
-function MintDataCard({ address, tokenURI }: Props): JSX.Element {
+function MintDataCard({ to, tokenURI }: Props): JSX.Element {
   return (
     <Box p={4} borderWidth={1} borderRadius="lg">
       <HStack>
@@ -24,7 +24,7 @@ function MintDataCard({ address, tokenURI }: Props): JSX.Element {
           </Box>
         </VStack>
         <VStack align="start">
-          <Box as="h4">{address}</Box>
+          <Box as="h4">{to}</Box>
           <Box as="h4">
             <Link href={tokenURI} isExternal>
               {tokenURI}
