@@ -14,12 +14,14 @@ import TransferForm from '../components/TransferForm';
 import MintForm from '../components/MintForm';
 import MetadataForm from '../components/MetadataForm';
 import BatchMintForm from '../components/BatchMint';
+import Header from '../components/Header';
 
 function Home(): JSX.Element {
   return (
     <>
+      <Header />
       <WalletConnect />
-      <Tabs>
+      <Tabs align="center">
         <TabList>
           <Tab>Mint(v1)</Tab>
           <Tab>BatchMint(v2)</Tab>
