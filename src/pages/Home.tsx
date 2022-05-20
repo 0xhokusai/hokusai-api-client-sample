@@ -9,7 +9,6 @@ import {
   Text,
 } from '@chakra-ui/react';
 
-import WalletConnect from '../components/WalletConnect';
 import TransferForm from '../components/TransferForm';
 import MintForm from '../components/MintForm';
 import MetadataForm from '../components/MetadataForm';
@@ -20,12 +19,13 @@ function Home(): JSX.Element {
   return (
     <>
       <Header />
-      <WalletConnect />
-      <Tabs align="center">
+      <Tabs variant="enclosed" align="center">
         <TabList>
-          <Tab>Mint(v1)</Tab>
-          <Tab>BatchMint(v2)</Tab>
-          <Tab>Transfer</Tab>
+          <Tab _selected={{ color: 'white', bg: 'brand.100' }}>Mint One</Tab>
+          <Tab _selected={{ color: 'white', bg: 'brand.100' }}>
+            Mint Multiple
+          </Tab>
+          <Tab _selected={{ color: 'white', bg: 'brand.100' }}>Transfer</Tab>
         </TabList>
         <TabPanels>
           <TabPanel>
