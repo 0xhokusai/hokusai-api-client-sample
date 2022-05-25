@@ -136,6 +136,7 @@ function TransferForm(): JSX.Element {
           borderRadius="20px"
           p="30px"
           align="center"
+          boxShadow="lg"
         >
           <form onSubmit={onSubmit}>
             <FormControl id="apiKey" isInvalid={!!errors.apiKey} py={2}>
