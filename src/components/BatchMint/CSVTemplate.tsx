@@ -30,7 +30,7 @@ const CSVTemplate: React.FC<Props> = ({ sampleJson }) => {
       <Button
         onClick={handleDownload}
         variant="outline"
-        color="blue.500"
+        color="brand.100"
         size="sm"
         leftIcon={<DownloadIcon height={15} width={15} />}
       >
