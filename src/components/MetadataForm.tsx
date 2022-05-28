@@ -13,9 +13,13 @@ import {
   Text,
   Box,
   Image,
+  Icon,
+  Heading,
 } from '@chakra-ui/react';
 import { NFTStorage, toGatewayURL } from 'nft.storage';
 import { useDropzone } from 'react-dropzone';
+import { AiOutlinePicture } from 'react-icons/ai';
+import { CheckIcon } from '@chakra-ui/icons';
 
 type FormValues = {
   name: string;
@@ -73,9 +77,27 @@ function MetadataForm(): JSX.Element {
   return isConfirmed ? (
     <>
       <Center>
-        <Stack direction="column" align="center">
+        <Stack
+          direction="column"
+          spacing="10px"
+          borderRadius="20px"
+          p={8}
+          align="center"
+          shadow="lg"
+        >
           {isLoading && <Spinner />}
-          <Link isExternal href={response}>
+          {!isLoading && (
+            <>
+              <CheckIcon w={12} h={12} color="brand.100" />
+              <Heading as="h3" size="lg">
+                Metadata Created.
+              </Heading>
+              <Text size="xs" color="brand.100">
+                Please copy this link and paste it into the form below.
+              </Text>
+            </>
+          )}
+          <Link isExternal href={response} py={4}>
             {response}
           </Link>
           {error && <Text>error</Text>}
@@ -90,8 +112,9 @@ function MetadataForm(): JSX.Element {
           direction="column"
           spacing="10px"
           borderRadius="20px"
-          p="30px"
+          p={8}
           align="center"
+          boxShadow="lg"
         >
           <form onSubmit={onSubmit}>
             <FormControl id="name" isInvalid={!!errors.name} py={2}>
@@ -138,9 +161,13 @@ function MetadataForm(): JSX.Element {
                 </>
               )}
             </Box>
-            <Center p={4}>
-              <Button p={4} type="submit">
-                Submit
+            <Center pt={8}>
+              <Button
+                p={4}
+                type="submit"
+                leftIcon={<Icon as={AiOutlinePicture} />}
+              >
+                Create Metadata
               </Button>
             </Center>
           </form>

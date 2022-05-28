@@ -12,11 +12,8 @@ import {
   Link,
   Text,
   Icon,
-  Select,
-  Heading,
 } from '@chakra-ui/react';
 import { AiOutlineRocket } from 'react-icons/ai';
-import { BiWinkSmile } from 'react-icons/bi';
 import { WalletContext } from '../context/WalletProvider';
 import { genPolygonscanUrl, TxObj } from '../utils/Poygonscan';
 
@@ -25,10 +22,9 @@ type FormValues = {
   contractId: string;
   toAddress: string;
   tokenUri: string;
-  network: string;
 };
 
-function MintForm(): JSX.Element {
+function MintFormV1(): JSX.Element {
   const {
     register,
     handleSubmit,
@@ -39,23 +35,21 @@ function MintForm(): JSX.Element {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [response, setResponse] = useState<string>('');
   const [error, setError] = useState<string>('');
-  const baseUrl = 'api.hokusai.app';
-  const version = '2'; // V2内でのヴァージョン
+  const baseUrl =
+    network === 'PolygonMainnet' ? 'polygon.hokusai.app' : 'mumbai.hokusai.app';
 
   const onSubmit = handleSubmit(async (values: FormValues) => {
     setIsLoading(true);
     setIsConfirmed(true);
     await fetch(
-      `https://${baseUrl}/v2/${values.network}/nft/${version}/${values.contractId}/mint?key=${values.apiKey}`,
+      `https://${baseUrl}/v1/nfts/${values.contractId}/mint?key=${values.apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify([
-          {
-            to: values.toAddress,
-            tokenURI: values.tokenUri,
-          },
-        ]),
+        body: JSON.stringify({
+          to: values.toAddress,
+          tokenUri: values.tokenUri,
+        }),
       }
     )
       .then((res) => res.json())
@@ -77,28 +71,9 @@ function MintForm(): JSX.Element {
   return isConfirmed ? (
     <>
       <Center>
-        <Stack
-          direction="column"
-          spacing="10px"
-          borderRadius="20px"
-          p={8}
-          mb={8}
-          align="center"
-          boxShadow="lg"
-        >
+        <Stack direction="column" align="center">
           {isLoading && <Spinner />}
-          {!isLoading && (
-            <>
-              <Icon as={BiWinkSmile} w={24} h={24} color="brand.100" />
-              <Heading as="h1" size="2xl" color="brand.100">
-                Congratulations!
-              </Heading>
-              <Heading as="h3" size="lg" pt={6}>
-                Your NFT has successfully created.
-              </Heading>
-            </>
-          )}
-          <Link isExternal href={response} py={6}>
+          <Link isExternal href={response}>
             {response}
           </Link>
           {error && <Text>error</Text>}
@@ -108,13 +83,15 @@ function MintForm(): JSX.Element {
     </>
   ) : (
     <>
-      <Center pb={10}>
+      <Text size="md" py={6}>
+        This is a sample app of the old version(v1).
+      </Text>
+      <Center>
         <Stack
           direction="column"
           spacing="10px"
           borderRadius="20px"
           p={8}
-          mb={8}
           align="center"
           shadow="lg"
         >
@@ -154,34 +131,6 @@ function MintForm(): JSX.Element {
               />
               <FormErrorMessage>Fill this form.</FormErrorMessage>
             </FormControl>
-            <FormControl id="network" isInvalid={!!errors.network} py={2}>
-              <FormLabel>network</FormLabel>
-              <Text fontSize="xs" color="brand.100">
-                *Please select the network you chose when you applied for the
-                API key
-              </Text>
-              <Select
-                id="network"
-                placeholder="Select network"
-                type="network"
-                {...register('network', { required: true })}
-              >
-                <option>polygon-mainnet</option>
-                <option>polygon-mumbai</option>
-                <option>ethereum-mainnet</option>
-                <option>ethereum-rinkeby</option>
-                <option>astar-astar</option>
-                <option>astar-shiden</option>
-                <option>astar-shibuya</option>
-                <option>avalanche-mainnet</option>
-                <option>avalanche-fuji</option>
-                <option>binance-mainnet</option>
-                <option>binance-testnet</option>
-                <option>arbitrum-mainnet</option>
-                <option>arbitrum-rinkeby</option>
-              </Select>
-              <FormErrorMessage>Select Network.</FormErrorMessage>
-            </FormControl>
             <Center pt={6}>
               <Button
                 p={4}
@@ -201,4 +150,4 @@ function MintForm(): JSX.Element {
   );
 }
 
-export default MintForm;
+export default MintFormV1;
